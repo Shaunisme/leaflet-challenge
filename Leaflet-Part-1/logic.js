@@ -82,7 +82,7 @@ function createMap(earthquakesLayer) {
 
   // Create a baseMaps object.
   let baseMaps = {
-    "Street Map": street
+    "World Map": street
   };
 
   // Creat an overlays object.
