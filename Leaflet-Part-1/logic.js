@@ -6,21 +6,19 @@ const colors = ["darkred", "firebrick", "chocolate", "orangered", "lightsalmon",
 
 // Perform a GET request to the query URL.
 d3.json(queryUrl).then(function (data) {
-  console.log("features: ", data.features);
   // Using the features array sent back in the API data, create a GeoJSON layer, and add it to the map.
 
-  // 1.
   // Pass the features to a createFeatures() function:
   createFeatures(data.features);
 
 });
 
-// 2. 
 // marker size according magnitude
 function markerSize(mag) {
-  return ((mag+1)*0.8)**2;
+  return ((mag+3)*0.6)**2;
 }
 
+// marker coloraccording depth
 function markerColor(depth){
   if ( depth <= limits[0] ) {
     return colors[0];
@@ -41,12 +39,13 @@ function markerColor(depth){
   }
 }
 
+// build earthquakes layer
 var min=0;
 var max=0;
 function createFeatures(earthquakeData) {
 
   function addPopup(feature, layer) {
-    layer.bindPopup(`<h2>Mag ${feature.properties.mag}<br>Depth ${feature.geometry.coordinates[2]} km</h2><h3>${feature.properties.place}</h3><hr><p>${new Date(feature.properties.time)}</p>`);
+    layer.bindPopup(`<h2>Magnitude: ${feature.properties.mag}<br>Depth: ${feature.geometry.coordinates[2]} km<br><h3>${feature.properties.place}</h3><hr><p>${new Date(feature.properties.time)}</p>`);
     
     if ( min > feature.geometry.coordinates[2] ) {
       min = feature.geometry.coordinates[2];
@@ -54,7 +53,6 @@ function createFeatures(earthquakeData) {
     if ( max < feature.geometry.coordinates[2] ) {
       max = feature.geometry.coordinates[2];
     }
-
   }
 
   let earthquakesLayer = L.geoJSON(earthquakeData, {
@@ -71,15 +69,11 @@ function createFeatures(earthquakeData) {
     }
   });
 
-  // Pass the earthquake data to a createMap() function.
+  // Pass the earthquake layer to a createMap() function.
   createMap(earthquakesLayer);
-
 }
 
-
-// 3.
 // createMap() takes the earthquake data and incorporates it into the visualization:
-
 function createMap(earthquakesLayer) {
   // Create the base layers.
   let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -122,21 +116,23 @@ function createMap(earthquakesLayer) {
     var div = L.DomUtil.create('div', 'info legend');
     var labels = [];
 
+    div.innerHTML = `<div class="labels"><h4>Earthquake Depth</h4></div>`;
+
     var lastlimit;
     limits.forEach(function (limit, index) {
       if ( index == 0 ) 
-        labels.push(`<i style="background: ${colors[index]}"></i><span> ${min} - ${limit} km</span><br>`);
+        labels.push(`<i style="background: ${colors[index]}"></i> ${min} - ${limit} km<br clear="all">`);
       else 
-        labels.push(`<i style="background: ${colors[index]}"></i><span> ${lastlimit} - ${limit} km</span><br>`);
+        labels.push(`<i style="background: ${colors[index]}"></i> ${lastlimit} - ${limit} km<br clear="all">`);
       
       if ( index+1 == limits.length) {
-        labels.push(`<i style="background: ${colors[index+1]}"></i><span> ${limit} - ${max} km</span><br>`);
+        labels.push(`<i style="background: ${colors[index+1]}"></i> ${limit} - ${max} km<br clear="all">`);
       }
       lastlimit=limit;
     }); 
 
     div.innerHTML += `<div class="info legend"> ${labels.join('')} </div>`;
-    console.log("div: ",div);
+
     return div;
   };
   legend.addTo(myMap);
