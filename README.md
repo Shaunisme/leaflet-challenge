@@ -11,6 +11,9 @@ The USGS is interested in building a new set of tools that will allow them to vi
 USGS last 7 days earthquakes dataset, GeoJson format:
 https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson
 
+Tectonic plates boundary:
+https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json
+
 ### Language
 * Javascript
 * JS library: Leaflet
@@ -18,7 +21,7 @@ https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson
 * Html
 
 ### The result:
-![This is an image](https://i.ibb.co/Mf0K3Fj/Snipaste-2022-11-15-16-41-18.png)
+![This is screenshot](image/earthquakes.png)
 
 ## PS:
 I make the earthquakes greater depth appear lighter in color. Because "Shallow quakes generally tend to be more damaging than deeper quakes. Seismic waves from deep quakes have to travel farther to the surface, losing energy along the way. "
